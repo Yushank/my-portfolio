@@ -12,7 +12,7 @@ type Props = {
 
 const ProjectCard = ({ imgSrc, alt, title, description, tech }: Props) => {
   return (
-    <div className="group relative mb-4 w-full rounded-xl border border-slate-200 hover:shadow-lg dark:border-slate-700">
+    <div className="group relative mb-4 w-full rounded-xl border border-slate-200 hover:scale-[1.04] hover:shadow-lg dark:border-slate-700">
       <div className="relative flex flex-col items-start rounded p-4 dark:border-neutral-800">
         <h4 className="text-xl font-bold text-neutral-900 dark:bg-neutral-100">
           {title}
