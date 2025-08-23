@@ -34,9 +34,9 @@ export const Navbar = () => {
         }}
         transition={{
           duration: 0.3,
-          ease: "easeInOut",
+          ease: "linear",
         }}
-        className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-4xl items-center justify-between rounded-full bg-white px-4 py-2 dark:bg-neutral-900"
+        className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-4xl items-center justify-between rounded-full bg-white px-3 py-2 dark:bg-neutral-900"
       >
         <button className="h-10 w-10 rounded-full">
           <MoonIcon />
