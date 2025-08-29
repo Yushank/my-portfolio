@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { promises as fs } from "fs";
 import path from "path";
 
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { compileMDX, MDXRemote } from "next-mdx-remote/rsc";
 
 export const metadata: Metadata = {
   title: "All blogs - Yushank Kashyap",
@@ -17,6 +17,11 @@ export default async function SingleBlogsPage() {
     "utf-8",
   );
 
+  const { content, frontmatter } = await compileMDX<{ title: string }>({
+    source: singleBlog,
+    options: { parseFrontmatter: true },
+  });
+
   return (
     <div className="flex min-h-screen items-start justify-start">
       <Container classname="min-h-[200vh] p:4 md:pt-12 md:pb-10">
@@ -24,9 +29,7 @@ export default async function SingleBlogsPage() {
           Single blogs
         </h1>
 
-        <div className="prose">
-          <MDXRemote source={singleBlog} />
-        </div>
+        <div className="prose">{content}</div>
       </Container>
     </div>
   );
