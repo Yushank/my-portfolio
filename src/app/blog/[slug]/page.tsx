@@ -5,22 +5,32 @@ import { promises as fs } from "fs";
 import path from "path";
 
 import { compileMDX, MDXRemote } from "next-mdx-remote/rsc";
+import { getSingleBlog } from "@/utils/mdx";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "All blogs - Yushank Kashyap",
   description: "All my general wisdom and thoughts",
 };
 
-export default async function SingleBlogsPage() {
-  const singleBlog = await fs.readFile(
-    path.join(process.cwd(), "src/data/", "jwt-authentication-basics.mdx"),
-    "utf-8",
-  );
+export default async function SingleBlogsPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const slug = await params.slug;
+  console.log("slug gotten:", slug);
+  const blog = await getSingleBlog(slug);
 
-  const { content, frontmatter } = await compileMDX<{ title: string }>({
-    source: singleBlog,
-    options: { parseFrontmatter: true },
-  });
+  console.log("SingleBlog in singleBlogsPage:", blog);
+
+  if (!blog) {
+    redirect("/blog");
+  }
+
+  const { content, frontmatter } = blog;
+
+  console.log("frontmatter:", frontmatter);
 
   return (
     <div className="flex min-h-screen items-start justify-start">
@@ -29,7 +39,7 @@ export default async function SingleBlogsPage() {
           Single blogs
         </h1>
 
-        <div className="prose">{content}</div>
+        <div className="prose mx-2">{content}</div>
       </Container>
     </div>
   );
