@@ -1,18 +1,18 @@
 import { Container } from "@/components/container";
 import Projects from "@/components/projects";
-import Image from "next/image";
 
-export default function Home() {
+export default async function ProjectsPage() {
   return (
-    <div className="flex min-h-screen items-start justify-start">
+    <div className="flex min-h-screen items-start justify-center">
       <Container classname="min-h-screen p-4 md:pt-12 md:pb-10">
-        <h3>Hi, my name is</h3>
         <h1 className="text-primary text-3xl font-bold tracking-tight md:text-5xl">
-          Yushank Kashyap
+          Projects
         </h1>
         <p className="text-secondary max-w-lg pt-4 text-sm md:text-sm">
-          A Computer Science graduate who loves building web apps and exploring
-          new technologies to sharpen my skills.
+          I design and build full-stack web applications to grow my technical
+          skills and gain hands-on experience. My projects showcase a mix of
+          frontend and backend development, problem-solving, and exploration of
+          modern web technologies.
         </p>
         <Projects />
       </Container>

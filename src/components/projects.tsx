@@ -3,6 +3,7 @@
 import React from "react";
 import ProjectCard from "./projectCard";
 import { motion, Variants } from "motion/react";
+import { usePathname } from "next/navigation";
 
 const Projects = () => {
   const container = {
@@ -25,11 +26,17 @@ const Projects = () => {
     },
   };
 
+  const pathName = usePathname();
+  console.log("pathName:", pathName);
+
   return (
     <div className="py-10">
-      <h2 className="mt-8 mb-4 text-2xl font-bold text-black md:text-4xl dark:text-white">
-        Projects
-      </h2>
+      {/* show projects heading when in "/" but not in "/projects" */}
+      {pathName == "/projects" ? null : (
+        <h2 className="mt-8 mb-4 text-2xl font-bold text-black md:text-4xl dark:text-white">
+          Projects
+        </h2>
+      )}
       <motion.div
         variants={container}
         initial="hidden"

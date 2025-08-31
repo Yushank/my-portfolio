@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { Container } from "../container";
 import Link from "next/link";
-import { MoonIcon } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import Image from "next/image";
 
 export const Navbar = () => {
   const navItems = [
@@ -39,9 +39,15 @@ export const Navbar = () => {
         }}
         className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-4xl items-center justify-between rounded-full bg-white px-3 py-2 dark:bg-neutral-900"
       >
-        <button className="h-10 w-10 rounded-full">
-          <MoonIcon />
-        </button>
+        <Link href="/">
+          <Image
+            className="h-10 w-10 rounded-full"
+            src="/assets/profile.png"
+            height="100"
+            width="100"
+            alt="Avatar"
+          />
+        </Link>
         <div className="flex items-center">
           {navItems.map((item, index) => (
             <Link
