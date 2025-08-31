@@ -19,10 +19,7 @@ export default async function SingleBlogsPage({
   params: { slug: string };
 }) {
   const slug = await params.slug;
-  console.log("slug gotten:", slug);
   const blog = await getSingleBlog(slug);
-
-  console.log("SingleBlog in singleBlogsPage:", blog);
 
   if (!blog) {
     redirect("/blog");
