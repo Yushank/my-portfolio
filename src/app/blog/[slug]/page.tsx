@@ -1,17 +1,26 @@
 import { Container } from "@/components/container";
 import { Metadata } from "next";
-
-import { promises as fs } from "fs";
-import path from "path";
-
-import { compileMDX, MDXRemote } from "next-mdx-remote/rsc";
-import { getSingleBlog } from "@/utils/mdx";
+import { getBlogFrontMatterBySlug, getSingleBlog } from "@/utils/mdx";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "All blogs - Yushank Kashyap",
-  description: "All my general wisdom and thoughts",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const frontmatter = await getBlogFrontMatterBySlug(params.slug);
+
+  if (!frontmatter) {
+    return {
+      title: "Blog not found",
+    };
+  }
+
+  return {
+    title: frontmatter.title,
+    description: frontmatter.description,
+  };
+}
 
 export default async function SingleBlogsPage({
   params,

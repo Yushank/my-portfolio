@@ -52,7 +52,7 @@ export const getBlogs = async () => {
   return allBlogs;
 };
 
-const getBlogFrontMatterBySlug = async (slug: string) => {
+export const getBlogFrontMatterBySlug = async (slug: string) => {
   const singleBlog = await fs.readFile(
     path.join(process.cwd(), "src/data", `${slug}.mdx`),
     "utf-8",
@@ -64,7 +64,7 @@ const getBlogFrontMatterBySlug = async (slug: string) => {
   }
   //if not return null
 
-  const frontmatter = await compileMDX<FrontMatter>({
+  const { frontmatter } = await compileMDX<FrontMatter>({
     source: singleBlog,
     options: { parseFrontmatter: true },
   });
