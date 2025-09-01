@@ -42,13 +42,9 @@ export default async function SingleBlogsPage({
   console.log("frontmatter:", frontmatter);
 
   return (
-    <div className="flex min-h-screen items-start justify-start">
-      <Container classname="min-h-[200vh] p:4 md:pt-12 md:pb-10">
-        <h1 className="text-primary text-3xl font-bold tracking-tight md:text-5xl">
-          Single blogs
-        </h1>
-
-        <div className="prose mx-2">{content}</div>
+    <div className="flex min-h-screen items-start justify-center">
+      <Container classname="min-h-screen p:4 md:pt-12 md:pb-10">
+        <div className="prose mx-6 max-w-none">{content}</div>
       </Container>
     </div>
   );

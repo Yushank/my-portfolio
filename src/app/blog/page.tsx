@@ -10,10 +10,14 @@ export const metadata: Metadata = {
 
 export default async function BlogsPage() {
   const allBlogs = await getBlogs();
-  console.log("allBlogs:", allBlogs);
+
+  const truncate = (str: string, length: number) => {
+    return str.length > length ? str.substring(0, length) + "..." : str;
+  };
+
   return (
     <div className="flex min-h-screen items-start justify-start">
-      <Container classname="min-h-[200vh] p:4 md:pt-12 md:pb-10">
+      <Container classname="min-h-screen p:4 md:pt-12 md:pb-10">
         <h1 className="text-primary text-3xl font-bold tracking-tight md:text-5xl">
           All Blogs
         </h1>
@@ -29,7 +33,7 @@ export default async function BlogsPage() {
                 </p>
               </div>
               <p className="text-secondary max-w-lg pt-2 text-sm md:text-sm">
-                {blog?.description}
+                {truncate(blog?.description || "", 150)}
               </p>
             </Link>
           ))}

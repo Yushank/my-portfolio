@@ -1,4 +1,5 @@
 import { Container } from "@/components/container";
+import { LandingBlogs } from "@/components/landing-blogs";
 import Projects from "@/components/projects";
 import Image from "next/image";
 
@@ -15,6 +16,7 @@ export default function Home() {
           new technologies to sharpen my skills.
         </p>
         <Projects />
+        <LandingBlogs />
       </Container>
     </div>
   );
