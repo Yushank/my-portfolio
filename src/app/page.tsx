@@ -1,5 +1,6 @@
 import { Container } from "@/components/container";
 import { LandingBlogs } from "@/components/landing-blogs";
+import { NavLinks } from "@/components/navlinks";
 import Projects from "@/components/projects";
 import Image from "next/image";
 
@@ -17,6 +18,7 @@ export default function Home() {
         </p>
         <Projects />
         <LandingBlogs />
+        {/* <NavLinks /> */}
       </Container>
     </div>
   );

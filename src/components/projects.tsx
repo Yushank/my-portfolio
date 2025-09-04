@@ -4,6 +4,7 @@ import React from "react";
 import ProjectCard from "./projectCard";
 import { motion, Variants } from "motion/react";
 import { usePathname } from "next/navigation";
+import { PulsingDot } from "./puslingDot";
 
 const Projects = () => {
   const container = {
@@ -53,6 +54,8 @@ const Projects = () => {
               description:
                 "AI-powered meal tracker where users log meals via chat, and the system breaks down nutritional values for any custom or standard food",
               tech: ["Gemma", "React", "Websocket", "PSQL", "Next"],
+              href: "https://lets-track.vercel.app/signup",
+              icon: <PulsingDot />,
             },
             {
               imgSrc: "/assets/guild.png",
@@ -61,6 +64,8 @@ const Projects = () => {
               description:
                 "A simple Kanban-style task management app where users create columns, add cards, and seamlessly move or delete tasks for better organization.",
               tech: ["React", "Websocket", "Redux", "PSQL", "Next"],
+              href: "",
+              icon: "",
             },
             {
               imgSrc: "/assets/auth-system-backend.png",
@@ -69,6 +74,8 @@ const Projects = () => {
               description:
                 "A backend-based authentication system with signup, login, JWT-based access and refresh tokens, auto token refresh via Axios interceptors, protected routes, and role-based authorization for admin and user access.",
               tech: ["Hono", "JWT", "PSQL", "Express", "Node"],
+              href: "",
+              icon: "",
             },
           ].map((project, i) => (
             <motion.div key={i} variants={item}>
