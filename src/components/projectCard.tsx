@@ -25,7 +25,7 @@ const ProjectCard = ({
     <Link href={href}>
       <div className="group relative mb-4 flex h-[400px] w-full flex-col justify-between rounded-xl border border-slate-200 hover:scale-[1.04] hover:shadow-lg dark:border-slate-700">
         <div className="relative flex flex-col items-start rounded p-4 dark:border-neutral-800">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <h4 className="text-xl font-bold text-neutral-900 dark:bg-neutral-100">
               {title}
             </h4>

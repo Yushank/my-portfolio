@@ -16,7 +16,6 @@ export const Navbar = () => {
     { title: "About", href: "/about" },
     { title: "Projects", href: "/projects" },
     { title: "Blogs", href: "/blog" },
-    { title: "Contact", href: "/contact" },
   ];
 
   const [hovered, setHovered] = useState<number | null>(null);
