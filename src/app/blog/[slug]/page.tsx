@@ -43,7 +43,7 @@ export default async function SingleBlogsPage({
 
   return (
     <div className="flex min-h-screen items-start justify-center">
-      <Container classname="min-h-screen p:4 md:pt-12 md:pb-10">
+      <Container classname="min-h-screen p-4 md:pt-12 md:pb-10">
         <div className="prose mx-6 max-w-none">{content}</div>
       </Container>
     </div>

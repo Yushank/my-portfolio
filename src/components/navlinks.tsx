@@ -25,7 +25,7 @@ export const NavLinks = () => {
     <Container>
       <div className="mx-w-2xl flex w-full flex-col items-start justify-center pt-4 pb-16">
         <hr className="mb-8 w-full border-1 border-gray-200 dark:border-gray-800" />
-        <div className="grid-col-1 grid w-full gap-4 sm:grid-cols-3">
+        <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3">
           {/* Internal nav link */}
           <div className="flex flex-col gap-4">
             {internalNavLinks.map((item, idx) => (

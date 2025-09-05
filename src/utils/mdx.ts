@@ -72,3 +72,26 @@ export const getBlogFrontMatterBySlug = async (slug: string) => {
 
   return frontmatter;
 };
+
+export const getAboutMe = async () => {
+  try {
+    const aboutMe = await fs.readFile(
+      path.join(process.cwd(), "src/data/", "about-me.mdx"),
+      "utf-8",
+    );
+
+    if (!aboutMe) {
+      return null;
+    }
+
+    const content = await compileMDX({
+      source: aboutMe,
+      options: { parseFrontmatter: true },
+    });
+
+    return content;
+  } catch (error) {
+    console.error("Error reading the about me file:", error);
+    return null;
+  }
+};
