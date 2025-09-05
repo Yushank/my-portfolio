@@ -23,7 +23,7 @@ export default async function BlogsPage() {
         </h1>
         <div className="flex flex-col gap-4 py-10">
           {allBlogs.map((blog, idx) => (
-            <Link key={blog.title} href={`/blog/${blog.slug}`}>
+            <Link key={idx} href={`/blog/${blog.slug}`}>
               <div className="flex items-center justify-between">
                 <h2 className="text-primary text-base font-bold tracking-tight">
                   {blog?.title}
