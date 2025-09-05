@@ -1,6 +1,5 @@
 import { getBlogs } from "@/utils/mdx";
 import React from "react";
-import { Container } from "./container";
 import Link from "next/link";
 
 export const LandingBlogs = async () => {

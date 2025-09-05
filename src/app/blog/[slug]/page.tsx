@@ -1,5 +1,4 @@
 import { Container } from "@/components/container";
-import { Metadata } from "next";
 import { getBlogFrontMatterBySlug, getSingleBlog } from "@/utils/mdx";
 import { redirect } from "next/navigation";
 
