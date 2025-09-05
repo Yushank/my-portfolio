@@ -7,17 +7,16 @@ export const NavLinks = () => {
     { title: "Home", href: "/" },
     { title: "Projects", href: "/projects" },
     { title: "Blog", href: "/blog" },
-    { title: "Contact", href: "/contact" },
   ];
 
   const externalNavLinks1 = [
     { title: "Github", href: "https://github.com/Yushank" },
     { title: "Twitter", href: "https://x.com/YushankKashyap" },
     { title: "Linkedin", href: "https://www.linkedin.com/in/yushank-kashyap/" },
-    { title: "Email", href: "mailto:yushank2001@gmail.com", external: true },
   ];
 
   const externalNavLinks2 = [
+    { title: "Email", href: "mailto:yushank2001@gmail.com", external: true },
     { title: "Resume", href: "/assets/resume.pdf", external: true },
   ];
   return (
@@ -43,8 +42,6 @@ export const NavLinks = () => {
               <Link
                 href={item.href}
                 key={idx}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noopener noreferrer" : undefined}
                 className="text-secondary hover:text-primary text-sm"
               >
                 <span>{item.title}</span>
