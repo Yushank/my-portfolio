@@ -14,7 +14,9 @@ export default async function AboutPage() {
           {aboutMeContent?.content}
         </div>
         <div className="text-primary mx-6 pt-10">
-          <p>Here are a few technologies I've been working with recently:</p>
+          <p>
+            Here are a few technologies I&apos;ve been working with recently:
+          </p>
           <ul className="grid grid-cols-2 gap-4 pt-10">
             <li className="flex">
               <Dot />
