@@ -2,12 +2,12 @@ import { Container } from "@/components/container";
 import { getBlogFrontMatterBySlug, getSingleBlog } from "@/utils/mdx";
 import { redirect } from "next/navigation";
 
-interface BlogPageProps {
-  params: { slug: string };
-}
-
-export async function generateMetadata({ params }: BlogPageProps) {
-  const slug = params.slug;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const frontmatter = await getBlogFrontMatterBySlug(slug);
 
   if (!frontmatter) {
@@ -22,8 +22,12 @@ export async function generateMetadata({ params }: BlogPageProps) {
   };
 }
 
-export default async function SingleBlogsPage({ params }: BlogPageProps) {
-  const slug = await params.slug;
+export default async function SingleBlogsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const blog = await getSingleBlog(slug);
 
   if (!blog) {
