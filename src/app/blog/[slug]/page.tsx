@@ -7,8 +7,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }) {
-  const awaited = await params; //awaited params to fix await params error
-  const slug = awaited.slug;
+  const slug = await params.slug;
   const frontmatter = await getBlogFrontMatterBySlug(slug);
 
   if (!frontmatter) {
@@ -28,8 +27,7 @@ export default async function SingleBlogsPage({
 }: {
   params: { slug: string };
 }) {
-  const awaited = await params; //awaited params to fix await params error
-  const slug = awaited.slug;
+  const slug = await params.slug;
   const blog = await getSingleBlog(slug);
 
   if (!blog) {
