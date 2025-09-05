@@ -48,7 +48,7 @@ export const Navbar = () => {
       >
         <Link href="/">
           <Image
-            className="h-10 w-10 rounded-full"
+            className="h-5 w-5 rounded-full md:h-10 md:w-10"
             src="/assets/profile.png"
             height="100"
             width="100"
