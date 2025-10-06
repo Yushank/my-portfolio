@@ -48,6 +48,16 @@ const Projects = () => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {[
             {
+              imgSrc: "/assets/ai-dungeon-escape.png",
+              alt: "AI-Dungeon-Escape project",
+              title: "AI Dungeon Escape",
+              description:
+                "Interactive text adventure game where AI dynamically generates dungeon scenarios and players make choices to escape in real-time",
+              tech: ["Cerebras AI SDK", "React", "Websocket", "Typescript"],
+              href: "https://ai-dungeon-escape-egnf.vercel.app/",
+              icon: <PulsingDot />,
+            },
+            {
               imgSrc: "/assets/lets-track.png",
               alt: "lets-track project",
               title: "Lets-track",
