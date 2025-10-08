@@ -16,7 +16,7 @@ export const NavLinks = () => {
   ];
 
   const externalNavLinks2 = [
-    { title: "Email", href: "mailto:yushank2001@gmail.com", external: true },
+    { title: "Email", href: "mailto:yushank.dev@gmail.com", external: true },
     { title: "Resume", href: "/assets/resume.pdf", external: true },
   ];
   return (
