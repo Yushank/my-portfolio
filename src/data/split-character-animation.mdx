@@ -1,0 +1,201 @@
+---
+title: "Split Character Scroll Animation with GSAP: A Deep Dive"
+description: "Learn how to create stunning scroll-triggered text animations using GSAP's SplitText and ScrollTrigger. Master character-by-character animations that respond to scroll position with smooth, reversible effects."
+date: "2024-11-21"
+image: "/blog/split-text-animation.jpg"
+---
+
+# Split Character Scroll Animation with GSAP
+
+Creating scroll-triggered text animations can add a dynamic, engaging feel to your website. In this guide, we'll build a split character animation where text elements appear scattered from different directions and converge into place as you scroll.
+
+## What We're Building
+
+Imagine text where each character flies in from above or below while the entire text container slides in from the sides—all synchronized with your scroll position. That's exactly what we're creating here.
+
+![Initial State](/public/assets/split2.png)
+_The animation before scroll starts_
+
+![Mid Animation](/public/assets/split3.png)
+_Characters begin to appear as you scroll_
+
+![Complete Animation](/public/assets/split1.png)
+_Text fully assembled in its final position_
+
+## Setup and Imports
+
+First, we need to import GSAP and register the plugins we'll use:
+
+```jsx
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
+```
+
+**SplitText** lets us break text into individual characters that we can animate separately, while **ScrollTrigger** ties these animations to scroll position.
+
+## Creating References
+
+We need to target our text elements, so we create refs for each heading:
+
+```jsx
+const heading1Ref = useRef < HTMLHeadingElement > null;
+const heading2Ref = useRef < HTMLHeadingElement > null;
+const heading3Ref = useRef < HTMLHeadingElement > null;
+```
+
+## Setting Up the Animation Structure
+
+Inside our useEffect, we organize everything into arrays for easy iteration:
+
+```jsx
+const titleHeadings = [
+  heading1Ref.current,
+  heading2Ref.current,
+  heading3Ref.current,
+].filter(Boolean) as HTMLElement[];
+
+const splits: SplitText[] = [];
+const containers = titleHeadings.map((heading) => heading.parentElement);
+```
+
+The `titleHeadings` array holds all our text elements, `splits` will store the split character data, and `containers` holds each heading's parent div.
+
+## Splitting the Text
+
+Now comes the magic part—breaking each heading into individual characters:
+
+```jsx
+titleHeadings.forEach((heading: HTMLElement, index: number) => {
+  const split = SplitText.create(heading, {
+    type: "chars",
+    charsClass: "char",
+  });
+  splits.push(split);
+```
+
+Each character becomes its own element that we can animate independently.
+
+## Setting Initial Positions
+
+### Character Positions
+
+We position characters alternately above and below their final position:
+
+```jsx
+split.chars.forEach((char: Element, i: number) => {
+  const charInitialY = i % 2 === 0 ? -150 : 150;
+  gsap.set(char, { y: charInitialY });
+});
+```
+
+Even-indexed characters (0, 2, 4...) start 150px above (`y: -150`), while odd-indexed ones (1, 3, 5...) start 150px below (`y: 150`). This creates a scattered, staggered effect.
+
+### Container Positions
+
+We also offset the entire container horizontally:
+
+```jsx
+const containerX = index === 1 ? -100 : 100;
+gsap.set(containers[index], { x: `${containerX}%` });
+```
+
+The middle heading (index 1) slides in from the left (`-100%`), while others slide in from the right (`100%`). Using percentages ensures consistent behavior across different screen sizes.
+
+## Animating on Scroll
+
+Now we animate both the container and characters as the user scrolls:
+
+```jsx
+titleHeadings.forEach((heading: HTMLElement, index: number) => {
+  const container = containers[index];
+  const split = splits[index];
+  const outerContainer = heading.parentElement?.parentElement;
+
+  // Container slides into view
+  gsap.to(container, {
+    x: 0,
+    scrollTrigger: {
+      trigger: outerContainer,
+      start: "top bottom",
+      end: "top -25%",
+      scrub: 1,
+    },
+  });
+
+  // Characters converge to their positions
+  gsap.to(split.chars, {
+    y: 0,
+    opacity: 1,
+    stagger: 0.03,
+    scrollTrigger: {
+      trigger: outerContainer,
+      start: "top bottom",
+      end: "top -25%",
+      scrub: 1,
+    },
+  });
+});
+```
+
+**What's happening:**
+
+- Both animations target `x: 0` and `y: 0`—the natural position of elements
+- `start: "top bottom"` means the animation begins when the top of the trigger element reaches the bottom of the viewport
+- `end: "top -25%"` means it completes when the trigger's top is 25% above the viewport
+- `scrub: 1` creates a smooth, scroll-linked animation that plays forward when scrolling down and reverses when scrolling up
+- `stagger: 0.03` adds a 0.03-second delay between each character's animation, creating a wave effect
+
+## Cleanup
+
+When the component unmounts, we need to clean up:
+
+```jsx
+return () => {
+  splits.forEach((split) => split.revert());
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+};
+```
+
+**`split.revert()`** restores the original HTML structure by removing all the character-wrapping elements that SplitText created. Without this, the DOM would keep accumulating wrapper elements if the component re-renders.
+
+**`trigger.kill()`** removes all ScrollTrigger instances, preventing memory leaks and ensuring scroll listeners don't persist after the component is gone.
+
+## The Importance of Overflow Hidden
+
+In the JSX structure, each section has `overflow-hidden`:
+
+```jsx
+<div className="bg-primary flex h-[85vh] items-center overflow-hidden">
+  <div className="relative flex w-full justify-center will-change-transform">
+    <h1 ref={heading1Ref}>No more</h1>
+  </div>
+</div>
+```
+
+**Why is this critical?**
+
+Without `overflow-hidden`, you'd see characters floating outside their containers at positions like `y: -150` or `y: 150` before they animate in. The screen would show scattered text everywhere, breaking the illusion. `overflow-hidden` clips anything outside the container's bounds, so characters only become visible as they slide into view.
+
+Think of it like a stage curtain—it hides the actors until they walk onto the visible stage area.
+
+## Putting It All Together
+
+The complete animation creates a captivating effect:
+
+1. Characters start scattered vertically (some up, some down)
+2. Containers start offset horizontally (left or right)
+3. As you scroll, containers slide into center position
+4. Simultaneously, characters converge from their scattered positions
+5. Everything meets precisely in the center, forming readable text
+6. Scroll back up, and the entire sequence reverses smoothly
+
+This technique works beautifully for call-to-action sections, hero text, or any content where you want to create impact through motion. The key is the combination of container movement and individual character animation happening in perfect sync with the user's scroll.
+
+## Final Thoughts
+
+This animation pattern is versatile. You can adjust the initial positions, scroll ranges, stagger timing, or even add rotation to characters for different effects. The principles remain the same: split the text, set initial states far from the final position, then animate everything to its natural place as the user scrolls.
+
+Experiment with the values and see what works best for your design!
