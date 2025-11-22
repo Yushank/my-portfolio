@@ -1,0 +1,228 @@
+---
+title: "Building a Circular Expanding Navbar with React"
+description: "Learn how to create a smooth circular navbar animation that expands from a button to cover the entire screen. We'll dive into the geometry calculations and animation techniques that make this effect work."
+date: "2024-11-22"
+image: ""
+---
+
+# Building a Circular Expanding Navbar with React
+
+Ever wondered how those sleek circular menu animations work? You know, the ones where you click a button and a circle expands across the screen, revealing navigation links? Let's build one from scratch and understand the math and logic behind it.
+
+{/* Video placeholder - add your demo video here */}
+
+<div className="video-container my-8">
+  <video
+    className="w-full rounded-lg shadow-lg"
+    autoPlay
+    loop
+    muted
+    playsInline
+  >
+    <source src="/assets/navbar.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+## What We're Building
+
+We're creating a navbar that stays hidden until you click a hamburger menu button in the top-right corner. When clicked, a circular overlay expands from that button position, eventually covering the entire viewport and revealing your navigation links. The effect is smooth, satisfying, and surprisingly straightforward once you understand the geometry involved.
+
+## The Basic Structure
+
+Let's start simple. We need a button positioned in the top-right corner and a hidden navigation menu:
+
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+const [radius, setRadius] = useState(0);
+const navRef = useRef<HTMLDivElement>(null);
+const buttonRef = useRef<HTMLButtonElement>(null);
+```
+
+We're tracking two key pieces of state:
+
+- **isOpen**: Whether the menu is currently visible
+- **radius**: The size of our expanding circle (in pixels)
+
+The refs help us reference the actual DOM elements so we can measure their positions and dimensions.
+
+## The Geometry Challenge
+
+Here's where it gets interesting. When the button is clicked, we need to figure out: _How large does our circle need to be to cover the entire screen?_
+
+Since the button is in the top-right corner, the farthest point from it is the bottom-left corner of the viewport. That's the distance our circle needs to span.
+
+### Calculating the Center Point
+
+First, we need to find the exact center of our button:
+
+```tsx
+const rect = buttonRef.current.getBoundingClientRect();
+const centerX = rect.left + rect.width / 2;
+const centerY = rect.top + rect.height / 2;
+```
+
+`getBoundingClientRect()` gives us all the positioning data we need—distances from the left edge, top edge, and the button's dimensions. To find the center, we simply add half the width to the left position, and half the height to the top position.
+
+### Finding the Maximum Radius
+
+Now comes the clever part. We need to calculate the distance from our button's center to each corner of the viewport, then use the largest distance:
+
+```tsx
+const distances = [
+  Math.hypot(centerX, centerY), // Top-left
+  Math.hypot(window.innerWidth - centerX, centerY), // Top-right
+  Math.hypot(centerX, window.innerHeight - centerY), // Bottom-left
+  Math.hypot(window.innerWidth - centerX, window.innerHeight - centerY), // Bottom-right
+];
+
+return Math.max(...distances);
+```
+
+**Why `Math.hypot()`?** Remember the Pythagorean theorem from school? The distance between two points forms the hypotenuse of a right triangle. `Math.hypot(x, y)` calculates √(x² + y²) for us—exactly what we need.
+
+For each corner:
+
+- **Top-left**: Distance from left edge (centerX) and top edge (centerY)
+- **Top-right**: Distance from right edge (innerWidth - centerX) and top edge (centerY)
+- **Bottom-left**: Distance from left edge (centerX) and bottom edge (innerHeight - centerY)
+- **Bottom-right**: Distance from right edge and bottom edge
+
+The largest of these distances ensures our circle can reach every corner of the screen.
+
+## The Animation Magic
+
+Here's where the smooth animation comes in:
+
+```tsx
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const calculateRadius = () => {
+    if (!buttonRef.current) return;
+
+    const rect = buttonRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const distances = [
+      Math.hypot(centerX, centerY),
+      Math.hypot(window.innerWidth - centerX, centerY),
+      Math.hypot(centerX, window.innerHeight - centerY),
+      Math.hypot(window.innerWidth - centerX, window.innerHeight - centerY),
+    ];
+
+    return Math.max(...distances);
+  };
+
+  if (isOpen) {
+    const maxRadius = calculateRadius();
+    setRadius(0);
+
+    requestAnimationFrame(() => {
+      setRadius(maxRadius!);
+    });
+  } else {
+    setRadius(0);
+  }
+}, [isOpen]);
+```
+
+### Why Not Just Set the Radius Directly?
+
+You might wonder: why set the radius to 0 first, then use `requestAnimationFrame()` to set it to the maximum?
+
+If we did this:
+
+```tsx
+// Don't do this!
+const maxRadius = calculateRadius();
+setRadius(maxRadius);
+```
+
+The change would happen instantly—the circle would just _pop_ into existence. No animation, no smooth transition. It would feel jarring.
+
+Instead, we create two separate rendering frames:
+
+1. **Frame 1**: Set radius to 0 (circle is invisible)
+2. **Frame 2**: Set radius to maximum (circle expands)
+
+This two-step process, combined with CSS transitions, creates the smooth expanding effect. The browser interpolates between these two states, giving us that satisfying circular wipe animation.
+
+## The CSS Clip Path Trick
+
+The real secret sauce is in how we render the navbar:
+
+```tsx
+<nav
+  style={{
+    backgroundColor: "#c6e421",
+    clipPath: `circle(${radius}px at calc(100% - 50px) 47px)`,
+  }}
+>
+  {/* Navigation content */}
+</nav>
+```
+
+**clipPath** is a CSS property that lets us "cut out" a shape from an element. Here we're saying: "Only show the parts of this navbar that fall within a circle of `radius` pixels, centered at 50px from the right edge and 47px from the top."
+
+When the radius is 0, nothing is visible. As the radius grows to its maximum value, more and more of the navbar becomes visible, creating that expanding circle effect.
+
+Think of it like looking through a circular window that's growing larger—that's essentially what clipPath does.
+
+## Putting It All Together
+
+Here's the complete flow:
+
+1. User clicks the button
+2. `isOpen` changes to `true`
+3. The useEffect runs:
+   - Calculates how large the circle needs to be
+   - Sets radius to 0 (invisible)
+   - Requests an animation frame
+   - Sets radius to maximum (triggers smooth expansion)
+4. CSS transitions handle the smooth animation between states
+5. The clipPath reveals the navbar in a circular pattern
+6. Navigation links become visible when the animation completes
+
+When closing:
+
+- `isOpen` becomes `false`
+- Radius is set back to 0
+- The circle shrinks back down
+- The navbar becomes invisible again
+
+## Adding Navigation Items
+
+The component accepts an array of navigation items:
+
+```tsx
+const items = [
+  { label: "Contact", href: "mailto:yushank.dev@gmail.com" },
+  { label: "Socials", href: "https://x.com/YushankKashyap" },
+  { label: "Github", href: "https://github.com/Yushank" },
+];
+```
+
+Each link automatically closes the menu when clicked:
+
+```tsx
+<Link href={item.href} onClick={() => setIsOpen(false)}>
+  {item.label}
+</Link>
+```
+
+## Key Takeaways
+
+The beauty of this technique lies in combining several concepts:
+
+- **Geometric calculations** to find the right circle size
+- **requestAnimationFrame** to create smooth transitions
+- **CSS clipPath** to reveal content in a circular pattern
+- **React state** to coordinate everything
+
+Once you understand how each piece works, you can adapt this pattern for all sorts of creative transitions—expanding from different corners, using different shapes, or even creating multiple overlapping circles.
+
+The math might seem intimidating at first, but it's really just finding distances between points. The animation trick with `requestAnimationFrame` is what transforms a simple state change into a smooth, professional-looking effect.
+
+Now you've got the knowledge to build your own circular expanding menus. Play around with the timing, colors, and positioning to make it your own!
